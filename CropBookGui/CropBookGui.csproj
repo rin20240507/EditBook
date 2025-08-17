@@ -9,9 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.7.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="Prism.Wpf" Version="9.0.537" />
     <PackageReference Include="ReactiveProperty.WPF" Version="9.7.0" />
   </ItemGroup>
 

@@ -1,11 +1,10 @@
-using System.ComponentModel;
 using System.Diagnostics;
 using EditBookLib.Crop;
 using Reactive.Bindings;
 
 namespace CropBookGui.ViewModels;
 
-public class MainViewModel : BindableBase
+public class MainViewModel : ViewModelBase
 {
   public ReactiveProperty<bool> IsClosing { get; set; } = new ReactiveProperty<bool>(false);
   public ReactiveProperty<string> InputDir { get; } = new("Z:\\scan");

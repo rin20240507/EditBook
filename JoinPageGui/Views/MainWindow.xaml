@@ -1,0 +1,84 @@
+﻿<Window x:Class="JoinPageGui.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JoinPageGui"
+        xmlns:views="clr-namespace:JoinPageGui.Views"
+        xmlns:viewModels="clr-namespace:JoinPageGui.ViewModels"
+        mc:Ignorable="d"
+        views:CloseWindowAttachedBehavior.Close="{Binding Close.Value}"
+
+        Title="{Binding Title}" Height="350" Width="800">
+  <Window.DataContext>
+    <viewModels:MainViewModel />
+  </Window.DataContext>
+  <Window.Resources>
+    <Style TargetType="TextBlock" x:Key="TextBlockBase">
+    </Style>
+    <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="TextBox">
+      <Setter Property="Height" Value="30"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="Button">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Width" Value="100"/>
+      <Setter Property="Height" Value="40"/>
+    </Style>
+    <Style TargetType="ColumnDefinition" x:Key="ColumnHeader">
+      <Setter Property="Width" Value="100" />
+    </Style>
+    <Style TargetType="ColumnDefinition" x:Key="ColumnMiddle">
+      <Setter Property="Width" Value="20" />
+    </Style>
+  </Window.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="3*"/>
+      <RowDefinition/>
+      <RowDefinition Height="4*" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Style="{StaticResource ColumnHeader}"/>
+        <ColumnDefinition Style="{StaticResource ColumnMiddle}"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      
+      <TextBlock Grid.Row="0" Grid.Column="0" Text="入力フォルダ"/>
+      <TextBlock Grid.Row="0" Grid.Column="1" Text="："/>
+      <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding InputDirectory.Value}"/>
+      
+      <TextBlock Grid.Row="1" Grid.Column="0" Text="出力フォルダ"/>
+      <TextBlock Grid.Row="1" Grid.Column="1" Text="："/>
+      <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding OutputDirectory.Value}"/>
+      
+      <TextBlock Grid.Row="2" Grid.Column="0" Text="高さ"/>
+      <TextBlock Grid.Row="2" Grid.Column="1" Text="："/>
+      <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Height.Value}"/>
+    </Grid>
+    
+    <!-- <ListBox Grid.Row="1" ItemsSource="{Binding ProcessList}"/> -->
+    <TextBlock Grid.Row="2" Text="{Binding Status.Value}" TextWrapping="Wrap" />
+    
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="実行" Command="{Binding ProcessCommand}"/>
+      <Button Grid.Column="1" Content="閉じる" Command="{Binding CloseCommand}"/>
+    </Grid>
+  </Grid>
+</Window>
