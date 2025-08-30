@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:JoinPageGui"
         xmlns:views="clr-namespace:JoinPageGui.Views"
         xmlns:viewModels="clr-namespace:JoinPageGui.ViewModels"
+        xmlns:baseViews="clr-namespace:WpfBase.Views;assembly=WpfBase"
         mc:Ignorable="d"
-        views:CloseWindowAttachedBehavior.Close="{Binding Close.Value}"
-
-        Title="{Binding Title}" Height="350" Width="800">
+        baseViews:CloseWindowAttachedBehavior.Close="{Binding Close.Value}"
+        Title="{Binding Title}" Height="600" Width="1200">
   <Window.DataContext>
     <viewModels:MainViewModel />
   </Window.DataContext>
@@ -19,6 +19,9 @@
     <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
       <Setter Property="FontSize" Value="16"/>
       <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="TextBlock" x:Key="TbConsole">
+      <Setter Property="FontSize" Value="12"/> 
     </Style>
     <Style TargetType="TextBox">
       <Setter Property="Height" Value="30"/>
@@ -37,12 +40,16 @@
     <Style TargetType="ColumnDefinition" x:Key="ColumnMiddle">
       <Setter Property="Width" Value="20" />
     </Style>
+    <Style TargetType="Border">
+      <Setter Property="BorderBrush" Value="Black"/>
+      <Setter Property="BorderThickness" Value="1"/>
+    </Style>
   </Window.Resources>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="3*"/>
       <RowDefinition/>
-      <RowDefinition Height="4*" />
+      <RowDefinition Height="400" />
     </Grid.RowDefinitions>
     <Grid Grid.Row="0">
       <Grid.RowDefinitions>
@@ -58,27 +65,33 @@
       
       <TextBlock Grid.Row="0" Grid.Column="0" Text="入力フォルダ"/>
       <TextBlock Grid.Row="0" Grid.Column="1" Text="："/>
-      <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding InputDirectory.Value}"/>
+      <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Input.Value}"/>
       
       <TextBlock Grid.Row="1" Grid.Column="0" Text="出力フォルダ"/>
       <TextBlock Grid.Row="1" Grid.Column="1" Text="："/>
-      <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding OutputDirectory.Value}"/>
+      <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Output.Value}"/>
       
       <TextBlock Grid.Row="2" Grid.Column="0" Text="高さ"/>
       <TextBlock Grid.Row="2" Grid.Column="1" Text="："/>
-      <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Height.Value}"/>
+      <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding HeightSize.Value}"/>
     </Grid>
-    
-    <!-- <ListBox Grid.Row="1" ItemsSource="{Binding ProcessList}"/> -->
-    <TextBlock Grid.Row="2" Text="{Binding Status.Value}" TextWrapping="Wrap" />
     
     <Grid Grid.Row="1">
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <Button Grid.Column="0" Content="実行" Command="{Binding ProcessCommand}"/>
+      <Button Grid.Column="0" Content="実行" Command="{Binding ExecuteCommand}"
+              />
       <Button Grid.Column="1" Content="閉じる" Command="{Binding CloseCommand}"/>
     </Grid>
+    
+    <!-- <ListBox Grid.Row="2" ItemsSource="{Binding ProcessList}"/> -->
+    <Border Grid.Row="2">
+      <TextBlock TextWrapping="Wrap" Style="{StaticResource TbConsole}"
+                 Text="{Binding Message.Value}"
+      />
+    </Border>
+
   </Grid>
 </Window>

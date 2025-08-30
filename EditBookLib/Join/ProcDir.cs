@@ -134,8 +134,11 @@ public static class ProcDir
   /// <param name="logAction"></param>
   private static void NoJoinFiles(string inDir, string outDir, int resizedHeight, Action<string>? logAction)
   {
+    var noDir = Path.Combine(inDir, "no");
+    if (!Directory.Exists(noDir)) return;
+    
     // ファイル一覧を取得
-    var files = Directory.EnumerateFiles(Path.Combine(inDir, "no"), "*", SearchOption.TopDirectoryOnly)
+    var files = Directory.EnumerateFiles(noDir, "*", SearchOption.TopDirectoryOnly)
       .Where(Function.IsImageFile).ToList();
     if (files.Count == 0) return;
     

@@ -2,7 +2,7 @@ namespace EditBookLib.Crop;
 
 using System.IO;
 
-public enum ProcType { Kindle, BookLive, PokeMaga, Capture, ScanBody }
+public enum ProcType { Kindle, BookLive, PokeMaga, Capture, ScanBody, Fanza4K }
 
 
 public class ProcDir
@@ -93,19 +93,21 @@ public class ProcDir
   /// <param name="outDir">出力ディレクトリ</param>
   private void ProcFilesAllCheck(string inDir, string outDir)
   {
-    CropImage img = MakeCropImage();
-    
+    WriteLog?.Invoke($"チェック中:{inDir}");
+
     // ファイル一覧を取得
     var files = Directory.EnumerateFiles(inDir, "*", SearchOption.TopDirectoryOnly).ToList();
-    
+
+    CropImage img = MakeCropImage();
     List<FileInfo> fileInfos =
     files.AsParallel().WithDegreeOfParallelism(ThreadCount)
       .Select(file =>
       {
         var info = new FileInfo(file);
-        (info.StartX, info.EndX) = img.GetCropX(file);
+        (info.StartX, info.EndX, info.Width) = img.GetCropX(file);
         return info;
       }).ToList();
+    
     // 単ページと見開きページに分ける
     var group = fileInfos.GroupBy(info => info.IsDoublePage());
     
@@ -115,7 +117,6 @@ public class ProcDir
       Console.WriteLine(grouping.Key ? "multi page" : "single page");
 
       List<FileInfo> procFileInfos = grouping.ToList();
-      
 
       ProcFilesAllCheckOne(procFileInfos, outDir);
     }
@@ -144,7 +145,6 @@ public class ProcDir
   private void ProcFilesAllCheckOne(List<FileInfo> fileInfos, string outDir)
   {
     CropImage img = MakeCropImage();
-
     // 全ファイルを精査して、開始位置と終了位置を特定する
     var g = fileInfos
       .Select(info => (info.StartX, info.EndX))
@@ -195,6 +195,7 @@ public class ProcDir
       ProcType.BookLive => new CropImageBookLive(),
       ProcType.Kindle => new CropImageKindle(),
       ProcType.PokeMaga => new CropImagePokeMaga(),
+      ProcType.Fanza4K => new CropImageFanza4K(),
       ProcType.ScanBody => new CropImageScanBody(),
       _ => new CropImageCapture()
     };

@@ -24,4 +24,10 @@
       <ProjectReference Include="..\EditBookLib\EditBookLib.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="WpfBase">
+        <HintPath>..\..\..\lib\WpfBase.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

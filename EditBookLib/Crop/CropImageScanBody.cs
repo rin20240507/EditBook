@@ -27,10 +27,10 @@ public class CropImageScanBody : CropImageCapture
       G: >= baseLow and <= baseHigh,
       B: >= baseLow and <= baseHigh
     };
-    if (posY == 2600)
-    {
-      Debug.WriteLine($"X: {posX},Y:{posY},ret:{ret} color: r: {color.R}, g: {color.G}, b: {color.B}");
-    }
+    // if (posY == 2600)
+    // {
+    //   Debug.WriteLine($"X: {posX},Y:{posY},ret:{ret} color: r: {color.R}, g: {color.G}, b: {color.B}");
+    // }
     return ret;
     
     // if (baseColor == null) return true;

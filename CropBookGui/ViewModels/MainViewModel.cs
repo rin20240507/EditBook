@@ -1,12 +1,15 @@
 using System.Diagnostics;
+using System.Windows.Documents;
 using EditBookLib.Crop;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
 namespace CropBookGui.ViewModels;
 
-public class MainViewModel : ViewModelBase
+public class MainViewModel : WpfBase.ViewModels.ViewModelBase
 {
-  public ReactiveProperty<bool> IsClosing { get; set; } = new ReactiveProperty<bool>(false);
+  public string Title => "余白削除";
+  public ReactiveProperty<bool> Close { get; set; } = new ReactiveProperty<bool>(false);
   public ReactiveProperty<string> InputDir { get; } = new("Z:\\scan");
   public ReactiveProperty<string> OutputDir { get; } = new("Z:\\WORK");
   
@@ -16,6 +19,7 @@ public class MainViewModel : ViewModelBase
   public ReactiveProperty<bool> IsKindle { get; } = new(true);
   public ReactiveProperty<bool> IsBookLive { get; } = new(false);
   public ReactiveProperty<bool> IsPokeMaga { get; } = new(false);
+  public ReactiveProperty<bool> IsFanza4K { get; } = new(false);
   public ReactiveProperty<bool> IsCapture { get; } = new(false);
   public ReactiveProperty<bool> IsScanBody { get; } = new(false);
   
@@ -31,6 +35,43 @@ public class MainViewModel : ViewModelBase
 
   public MainViewModel()
   {
+    var infoList = this.GetType().GetProperties();
+    foreach (var propertyInfo in infoList)
+    {
+      if (propertyInfo.PropertyType == typeof(ReactiveProperty<bool>))
+      {
+        var val =  propertyInfo.GetValue(this, null) as ReactiveProperty<bool>;
+        val?.AddTo(Disposable);
+      }
+      else if (propertyInfo.PropertyType == typeof(ReactiveProperty<string>))
+      {
+        var val =  propertyInfo.GetValue(this, null) as ReactiveProperty<string>;
+        val?.AddTo(Disposable);
+      }
+      else if (propertyInfo.PropertyType == typeof(ReactiveCommand))
+      {
+        var val =  propertyInfo.GetValue(this, null) as ReactiveCommand;
+        val?.AddTo(Disposable);
+      }
+
+      // if (propertyInfo.PropertyType.IsGenericType)
+      // var generic = propertyInfo.PropertyType.GetGenericTypeDefinition();
+      // Debug.WriteLine($"Name:[{propertyInfo.Name}]");
+      // Debug.WriteLine($"Type:[{propertyInfo.PropertyType.Name}]");
+      // Debug.WriteLine($"IsGenericType:[{propertyInfo.PropertyType.IsGenericType}]");
+      // if (propertyInfo.PropertyType.IsGenericType)
+      // {
+      //   Debug.WriteLine($"GenericType:[{propertyInfo.PropertyType.GetGenericArguments()[0].Name}]");
+      //   Debug.WriteLine($"IsReactiveProperty<>:[{propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(ReactiveProperty<>)}]");
+      //   if (propertyInfo.PropertyType == typeof(ReactiveProperty<bool>))
+      //   {
+      //     var val =  propertyInfo.GetValue(this, null) as ReactiveProperty<bool>;
+      //   }
+      // }
+      // this.GetType().GetProperty(propertyInfo.Name)?.SetValue(this, propertyInfo.GetValue(this, null));
+      
+    }
+    
     ProcCommand.Subscribe(ProcCommandExecute);
     ExitCommand.Subscribe(ExitCommandExecute);
   }
@@ -63,6 +104,10 @@ public class MainViewModel : ViewModelBase
     {
       procType = ProcType.PokeMaga;
     }
+    else if (IsFanza4K.Value)
+    {
+      procType = ProcType.Fanza4K;
+    }
     else if (IsScanBody.Value)
     {
       procType = ProcType.ScanBody;
@@ -92,8 +137,7 @@ public class MainViewModel : ViewModelBase
 
   private void ExitCommandExecute()
   {
-    IsClosing.Value = true;
-    Environment.Exit(0);
+    Close.Value = true;
   }
  
 }

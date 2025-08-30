@@ -9,8 +9,18 @@ public static class JoinImage
 {
   private const string WorkHeadName = "work";
 
+  /// <summary>
+  /// 画像結合
+  /// </summary>
+  /// <param name="inFile1">右側ファイル</param>
+  /// <param name="inFile2">左側ファイル</param>
+  /// <param name="outDir">出力ディレクトリ</param>
+  /// <param name="resizedHeight">縦サイズ</param>
+  /// <param name="logAction">ログ出力処理</param>
   public static void Run(string inFile1, string inFile2, string outDir, int resizedHeight, Action<string>? logAction)
   {
+    logAction?.Invoke($"File1: {inFile1}, File2: {inFile2}");
+    
     using var img1 = new MagickImage(inFile1);
     using var img2 = new MagickImage(inFile2);
     
@@ -48,8 +58,17 @@ public static class JoinImage
     return imgCollection.AppendHorizontally();
   }
 
+  /// <summary>
+  /// 結合しないファイル処理(リサイズのみ)
+  /// </summary>
+  /// <param name="inFile">入力ファイル</param>
+  /// <param name="outDir">出力ディレクトリ</param>
+  /// <param name="resizedHeight">高さ</param>
+  /// <param name="logAction">ログ出力処理</param>
   public static void RunNoJoin(string inFile, string outDir, int resizedHeight, Action<string>? logAction)
   {
+    logAction?.Invoke($"NoInFile:{inFile}");
+    
     using var img = new MagickImage(inFile);
     ResizeImage.ResizeHeight(img, resizedHeight);
     

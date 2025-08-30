@@ -3,30 +3,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CropBookGui"
+        xmlns:views="clr-namespace:WpfBase.Views;assembly=WpfBase"
         xmlns:viewModels="clr-namespace:CropBookGui.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="800">
+        views:CloseWindowAttachedBehavior.Close="{Binding Close.Value}"
+        Title="{Binding Title}" Height="500" Width="800">
   <Window.DataContext>
     <viewModels:MainViewModel/>
   </Window.DataContext>
   <Window.Resources>
+    <Style TargetType="Border">
+      <Setter Property="BorderThickness" Value="1"/>
+    </Style>
     <Style TargetType="TextBlock">
       <Setter Property="FontSize" Value="24"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="TextBlock" x:Key="LeftHeader">
+      <Setter Property="FontSize" Value="24"/>
+      <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
     <Style TargetType="TextBox">
       <Setter Property="FontSize" Value="24"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Margin" Value="0 5"/>
     </Style>
     <Style TargetType="RadioButton">
       <Setter Property="FontSize" Value="24"/>
       <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Margin" Value="20 1 1 1"/>
     </Style>
     <Style TargetType="CheckBox">
       <Setter Property="FontSize" Value="24"/>
       <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Margin" Value="20 1 1 1"/>
     </Style>
     <Style TargetType="Button">
       <Setter Property="FontSize" Value="24"/>
+      <Setter Property="Margin" Value="5"/>
     </Style>
     <Style TargetType="StackPanel">
       <Setter Property="VerticalAlignment" Value="Center"/>
@@ -35,46 +49,74 @@
   
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="2*"/>
       <RowDefinition Height="*"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="2*"/>
+      <RowDefinition Height="2*"/>
+      <RowDefinition Height="2*"/>
     </Grid.RowDefinitions>
 
-    <UniformGrid Grid.Row="0" Columns="1">
-      <StackPanel Orientation="Horizontal">
-        <TextBlock Text="処理："/>
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="80"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Grid.Column="0" Text="処理：" Style="{StaticResource LeftHeader}"/>
+      <WrapPanel Grid.Column="1" Orientation="Horizontal">
         <RadioButton Content="Kindle" IsChecked="{Binding IsKindle.Value}"/>
         <RadioButton Content="BookLive" IsChecked="{Binding IsBookLive.Value}"/>
         <RadioButton Content="PokeMaga" IsChecked="{Binding IsPokeMaga.Value}"/>
+        <RadioButton Content="Fanza4K" IsChecked="{Binding IsFanza4K.Value}"/>
         <RadioButton Content="Capture" IsChecked="{Binding IsCapture.Value}"/>
         <RadioButton Content="ScanBody" IsChecked="{Binding IsScanBody.Value}"/>
-      </StackPanel>
+      </WrapPanel>
+    </Grid>
+    
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
+      <TextBlock Text="出力：" Style="{StaticResource LeftHeader}"/>
+      <RadioButton Content="PNG" IsChecked="{Binding IsPng.Value}"/>
+      <RadioButton Content="JPEG" IsChecked="{Binding IsJpeg.Value}"/>
+    </StackPanel>
+    
+    <StackPanel Grid.Row="2" Orientation="Horizontal">
+      <TextBlock Text="処理：" Style="{StaticResource LeftHeader}"/>
+      <CheckBox Content="複数ディレクトリ" IsChecked="{Binding IsMultiDir.Value}"/>
+      <CheckBox Content="複数ファイルチェック" IsChecked="{Binding IsAllCheck.Value}"/>
+    </StackPanel>
+    
+    <StackPanel Grid.Row="3" Orientation="Horizontal">
+      <TextBlock Text="スレッド数："/>
+      <TextBox Text="{Binding ThreadCount.Value}" Width="40" TextAlignment="Right"/>
+    </StackPanel>
+    
+    <Grid Grid.Row="4">
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="160"/>
+        <ColumnDefinition Width="40"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
       
-      <StackPanel Orientation="Horizontal">
-        <TextBlock Text="出力："/>
-        <RadioButton Content="PNG" IsChecked="{Binding IsPng.Value}"/>
-        <RadioButton Content="JPEG" IsChecked="{Binding IsJpeg.Value}"/>
-      </StackPanel>
+      <TextBlock Grid.Row="0" Grid.Column="0" Text="入力ディレクトリ"/>
+      <TextBlock Grid.Row="0" Grid.Column="1" Text="："/>
+      <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding InputDir.Value}"/>
+    
+      <TextBlock Grid.Row="1" Grid.Column="0" Text="出力ディレクトリ"/>
+      <TextBlock Grid.Row="1" Grid.Column="1" Text="："/>
+      <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding OutputDir.Value}"/>
       
-      <UniformGrid Rows="1">
-        <CheckBox Content="複数ディレクトリ" IsChecked="{Binding IsMultiDir.Value}"/>
-        <CheckBox Content="複数ファイルチェック" IsChecked="{Binding IsAllCheck.Value}"/>
-      </UniformGrid>
-      
-      <TextBlock Text="入力ディレクトリ"/>
-      <TextBox Text="{Binding InputDir.Value}"/>
-      
-      <TextBlock Text="出力ディレクトリ"/>
-      <TextBox Text="{Binding OutputDir.Value}"/>
-      
-      <TextBlock Text="スレッド数"/>
-      <TextBox Text="{Binding ThreadCount.Value}"/>
-      
-      <TextBlock Text="{Binding StatusText.Value}"/>
-      
-      
-      <UniformGrid Rows="1">
-        <Button Content="処理" Command="{Binding ProcCommand}"/>
-        <Button Content="終了" Command="{Binding ExitCommand}"/>
-      </UniformGrid>
+    </Grid>
+    
+    <TextBlock Grid.Row="5" Text="{Binding StatusText.Value}"/>
+    
+    <UniformGrid Grid.Row="6" Rows="1">
+      <Button Content="処理" Command="{Binding ProcCommand}"/>
+      <Button Content="終了" Command="{Binding ExitCommand}"/>
     </UniformGrid>
   </Grid>
 </Window>

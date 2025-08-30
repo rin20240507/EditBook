@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="ReactiveProperty.WPF" Version="9.7.0" />
   </ItemGroup>
@@ -24,6 +24,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EditBookLib\EditBookLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WpfBase">
+      <HintPath>..\..\..\lib\WpfBase.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

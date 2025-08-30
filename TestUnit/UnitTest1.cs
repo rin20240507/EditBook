@@ -1,3 +1,4 @@
+using EditBookLib.Crop;
 using EditBookLib.Join;
 
 namespace TestUnit;
@@ -23,5 +24,15 @@ public class UnitTest1
     int resizedHeight = 1600;
     
     JoinImage.RunNoJoin(inFile1, outDir, resizedHeight, Console.WriteLine);
+  }
+
+  [Fact]
+  public void TestCropFanza()
+  {
+    const string inFile = @"X:\Prg\sample\fanza_2-002.png";
+    const string outFile = @"Z:\WORK\002.jpg";
+
+    CropImage img = new CropImageFanza4K();
+    img.Crop(inFile, outFile, DirType.Normal);
   }
 }

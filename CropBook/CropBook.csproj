@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.0" />
+      <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.1" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.8" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.8" />

@@ -78,14 +78,16 @@ public abstract class CropImage
   /// 画像のX軸の開始、終了位置を特定
   /// </summary>
   /// <param name="fileName">ファイル名</param>
-  /// <returns>(開始位置, 終了位置)</returns>
-  public (int, int) GetCropX(string fileName)
+  /// <returns>(開始位置, 終了位置, 幅)</returns>
+  public (int, int, int) GetCropX(string fileName)
   {
     try
     {
       using var img = new MagickImage(fileName);
+      (int startX, int endX) = GetCropX(img);
+      int width = (int) img.Width;
 
-      return GetCropX(img);
+      return (startX, endX, width);
     }
     catch (ArgumentOutOfRangeException e)
     {
