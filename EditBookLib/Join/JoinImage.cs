@@ -19,7 +19,7 @@ public static class JoinImage
   /// <param name="logAction">ログ出力処理</param>
   public static void Run(string inFile1, string inFile2, string outDir, int resizedHeight, Action<string>? logAction)
   {
-    logAction?.Invoke($"File1: {inFile1}, File2: {inFile2}");
+    logAction?.Invoke($"Path:{Path.GetDirectoryName(inFile1)} File1: {Path.GetFileName(inFile1)}, File2: {Path.GetFileName(inFile2)}");
     
     using var img1 = new MagickImage(inFile1);
     using var img2 = new MagickImage(inFile2);
