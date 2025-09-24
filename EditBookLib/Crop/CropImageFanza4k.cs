@@ -19,4 +19,9 @@ public class CropImageFanza4K : CropImage
     // return !(color.R.Equals(0) && color.G.Equals(0) && color.B.Equals(0));
   }
   
+  protected override (int, int) CropRight(int startX, int endX)
+  {
+    startX = startX + (endX - startX) / 2 + 1;
+    return (startX, endX);
+  }
 }
