@@ -67,6 +67,11 @@ public static class JoinImage
   /// <param name="logAction">ログ出力処理</param>
   public static void RunNoJoin(string inFile, string outDir, int resizedHeight, Action<string>? logAction)
   {
+    RunNoJoin(inFile, outDir, resizedHeight, true, logAction);
+  }
+
+  public static void RunNoJoin(string inFile, string outDir, int resizedHeight, bool isAddWorkName, Action<string>? logAction)
+  {
     logAction?.Invoke($"NoInFile:{inFile}");
     
     using var img = new MagickImage(inFile);
@@ -75,7 +80,9 @@ public static class JoinImage
     // var outFile = Path.Combine(outDir, $"{Path.GetFileNameWithoutExtension(inFile)}.{ExtName}");
     // logAction?.Invoke($"outFile:nojoin:{outFile}");
     // img.Write(outFile);
-    string baseName = $"{WorkHeadName}_{Path.GetFileNameWithoutExtension(inFile)}";
+    string baseName = isAddWorkName
+      ? $"{WorkHeadName}_{Path.GetFileNameWithoutExtension(inFile)}"
+      : Path.GetFileNameWithoutExtension(inFile);
     
     var basePath = Path.Combine(outDir, baseName);
     Function.SaveImageJpeg(img, basePath);

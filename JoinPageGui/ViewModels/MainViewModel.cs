@@ -15,6 +15,7 @@ public class MainViewModel : ViewModelBase
   public ReactiveProperty<string> Input { get; }
   public ReactiveProperty<string> Output { get; }
   public ReactiveProperty<string> HeightSize { get; }
+  public ReactiveProperty<bool> IsNoJoin { get; }
   
   /// <summary>
   /// 実行ボタン
@@ -34,9 +35,10 @@ public class MainViewModel : ViewModelBase
   {
     Close = new ReactiveProperty<bool>(false);
     
-    Input = new ReactiveProperty<string>("").AddTo(Disposable);
+    Input = new ReactiveProperty<string>(@"").AddTo(Disposable);
     Output = new ReactiveProperty<string>(@"Z:\wuxga").AddTo(Disposable);
     HeightSize = new ReactiveProperty<string>("1600").AddTo(Disposable);
+    IsNoJoin = new ReactiveProperty<bool>(false).AddTo(Disposable);
     
     IsExecuteCommand = new ReactiveProperty<bool>(true).AddTo(Disposable);
     // ExecuteCommand = new ReactiveCommand().AddTo(Disposable);
@@ -44,7 +46,7 @@ public class MainViewModel : ViewModelBase
     ExecuteCommand.Subscribe(_ => Process());
     
     CloseCommand = new ReactiveCommand().AddTo(Disposable);
-    CloseCommand.Subscribe(_ => CloseWindow());
+    CloseCommand.Subscribe(_ => Close.Value = true);
     
     _messageLine = [];
     Message = new ReactiveProperty<string>().AddTo(Disposable);
@@ -67,7 +69,14 @@ public class MainViewModel : ViewModelBase
     if (Output.Value == "") return;
     if (!int.TryParse(HeightSize.Value, out var height)) return;
 
-    Task.Run(JoinImage);
+    if (IsNoJoin.Value)
+    {
+      Task.Run(NoJoinImage);
+    }
+    else
+    {
+      Task.Run(JoinImage);
+    }
   }
 
   private void JoinImage()
@@ -78,9 +87,13 @@ public class MainViewModel : ViewModelBase
     IsExecuteCommand.Value = true;
   }
 
-  private void CloseWindow()
+  private void NoJoinImage()
   {
-    // IsExecuteCommand.Value = !IsExecuteCommand.Value;
-    Close.Value = true;
+    IsExecuteCommand.Value = false;
+    if (!int.TryParse(HeightSize.Value, out var height)) { return; }
+    
+    ProcDir.NoJoinRunDir(Input.Value, Output.Value, height, WriteLog);
+    
+    IsExecuteCommand.Value = true;
   }
 }

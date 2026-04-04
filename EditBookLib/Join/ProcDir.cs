@@ -38,6 +38,30 @@ public static class ProcDir
   }
 
   /// <summary>
+  /// 非結合処理(以下のディレクトリ全てを処理)
+  /// </summary>
+  /// <param name="inDir">入力ディレクトリ</param>
+  /// <param name="outPath">出力ディレクトリ</param>
+  /// <param name="resizedHeight">リサイズ</param>
+  /// <param name="logAction">ログ処理</param>
+  public static void NoJoinRunDir(string inDir, string outPath, int resizedHeight, Action<string>? logAction = null)
+  {
+    var dirList = Directory.GetDirectories(inDir);
+    
+    foreach (var procDir in dirList)
+    {
+      logAction?.Invoke($"inDir:{procDir}");
+      // 出力先を特定 ＆ 作成
+      var outDir = Path.Combine(outPath, Path.GetFileName(procDir));
+      Directory.CreateDirectory(outDir);
+      
+      NoJoinFiles(procDir, outDir, resizedHeight, false, logAction);
+    }
+    
+    logAction?.Invoke($"終了");
+  }
+
+  /// <summary>
   /// 結合処理(出力ディレクトリ作成など)
   /// </summary>
   /// <param name="inDir">入力ディレクトリ</param>
@@ -54,7 +78,8 @@ public static class ProcDir
     // 個別
     JoinFiles(inDir, outDir, resizedHeight, logAction);
     // 結合無し
-    NoJoinFiles(inDir, outDir, resizedHeight, logAction);
+    var noInDir = Path.Combine(inDir, "no");
+    NoJoinFiles(noInDir, outDir, resizedHeight, true, logAction);
     
     // リネーム
     RenameFiles(outDir, logAction);
@@ -131,21 +156,21 @@ public static class ProcDir
   /// <param name="inDir"></param>
   /// <param name="outDir"></param>
   /// <param name="resizedHeight">リサイズ</param>
+  /// <param name="isAddWorkName"></param>
   /// <param name="logAction"></param>
-  private static void NoJoinFiles(string inDir, string outDir, int resizedHeight, Action<string>? logAction)
+  private static void NoJoinFiles(string inDir, string outDir, int resizedHeight, bool isAddWorkName, Action<string>? logAction)
   {
-    var noDir = Path.Combine(inDir, "no");
-    if (!Directory.Exists(noDir)) return;
+    if (!Directory.Exists(inDir)) return;
     
     // ファイル一覧を取得
-    var files = Directory.EnumerateFiles(noDir, "*", SearchOption.TopDirectoryOnly)
+    var files = Directory.EnumerateFiles(inDir, "*", SearchOption.TopDirectoryOnly)
       .Where(Function.IsImageFile).ToList();
     if (files.Count == 0) return;
     
     var noProfFiles = files.Where(Function.IsImageFile).ToList();
     noProfFiles.AsParallel()
       .WithDegreeOfParallelism(4)
-      .ForAll(f => JoinImage.RunNoJoin(f, outDir, resizedHeight, logAction));
+      .ForAll(f => JoinImage.RunNoJoin(f, outDir, resizedHeight, isAddWorkName, logAction));
   }
 
   /// <summary>
