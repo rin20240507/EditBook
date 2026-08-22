@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:CropBookGui.ViewModels"
         mc:Ignorable="d"
         views:CloseWindowAttachedBehavior.Close="{Binding Close.Value}"
-        Title="{Binding Title}" Height="500" Width="800">
+        Title="{Binding Title}" Height="600" Width="800">
   <Window.DataContext>
     <viewModels:MainViewModel/>
   </Window.DataContext>
@@ -54,6 +54,7 @@
       <RowDefinition Height="*"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="2*"/>
+      <RowDefinition Height="*"/>
       <RowDefinition Height="2*"/>
       <RowDefinition Height="2*"/>
     </Grid.RowDefinitions>
@@ -112,9 +113,11 @@
       
     </Grid>
     
-    <TextBlock Grid.Row="5" Text="{Binding StatusText.Value}"/>
+    <TextBlock Grid.Row="5" Text="※右 -> l, 左 -> r, 分割 -> sp" TextAlignment="Center"/>
     
-    <UniformGrid Grid.Row="6" Rows="1">
+    <TextBlock Grid.Row="6" Text="{Binding StatusText.Value}"/>
+    
+    <UniformGrid Grid.Row="7" Rows="1">
       <Button Content="処理" Command="{Binding ProcCommand}"/>
       <Button Content="終了" Command="{Binding ExitCommand}"/>
     </UniformGrid>

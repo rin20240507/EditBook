@@ -129,6 +129,7 @@ public class ProcDir
       {
         "l" => DirType.Left,
         "r" => DirType.Right,
+        "sp" => DirType.Split,
         _ => DirType.Normal
       };
       
@@ -174,6 +175,13 @@ public class ProcDir
   /// <param name="dirType">入力ディレクトリタイプ</param>
   private void Cut(CropImage img, string inFileName, string outDir, DirType dirType = DirType.Normal)
   {
+    // 左右分割
+    if (dirType == DirType.Split)
+    {
+      CutAndSplit(img, inFileName, outDir);
+      return;
+    }
+    
     // var outFileName = $"{outDir}\\{Path.GetFileName(inFileName)}";
     string outFileName = Path.Combine(outDir, MakeOutFileName(inFileName));
     
@@ -181,6 +189,35 @@ public class ProcDir
     WriteLog?.Invoke($"{inFileName} -> {outFileName}");
     // カット
     img.Crop(inFileName, outFileName, dirType);
+  }
+
+  /// <summary>
+  /// カット＆分割処理
+  /// </summary>
+  /// <param name="img">画像処理オブジェクト</param>
+  /// <param name="inFileName">入力ファイル名</param>
+  /// <param name="outDir">出力ディレクトリ</param>
+  private void CutAndSplit(CropImage img, string inFileName, string outDir)
+  {
+    (string outFileNameRight, string outFileNameLeft) = MakeOutFileNameSplit(inFileName);
+    
+    // 左側処理
+    {
+      string outFileName =  Path.Combine(outDir, outFileNameLeft);
+      Console.WriteLine($"{inFileName} -> {outFileName}");
+      WriteLog?.Invoke($"{inFileName} -> {outFileName}");
+      // カット
+      img.Crop(inFileName, outFileName, DirType.Left);
+    }
+    
+    // 右側処理
+    {
+      string outFileName =  Path.Combine(outDir, outFileNameRight);
+      Console.WriteLine($"{inFileName} -> {outFileName}");
+      WriteLog?.Invoke($"{inFileName} -> {outFileName}");
+      // カット
+      img.Crop(inFileName, outFileName, DirType.Right);
+    }
   }
 
   /// <summary>
@@ -220,5 +257,31 @@ public class ProcDir
         // そのまま
       return Path.GetFileName(inFileName);
     }
+  }
+
+  /// <summary>
+  /// 出力ファイル名の生成
+  /// </summary>
+  /// <param name="inFileName">入力ファイル名</param>
+  /// <returns>出力ファイル名</returns>
+  private (string, string) MakeOutFileNameSplit(string inFileName)
+  {
+    string extName;
+    if (IsJpeg)
+    {
+      // JPEGに変換
+      extName = ".jpg";
+    }
+    else
+    {
+      // そのまま
+      extName = Path.GetExtension(inFileName);
+      // return Path.GetFileName(inFileName);
+    }
+
+    var outFileNameRight = Path.GetFileNameWithoutExtension(inFileName) + "-1" + extName;
+    var outFileNameLeft = Path.GetFileNameWithoutExtension(inFileName) + "-2" + extName;
+
+    return (outFileNameRight, outFileNameLeft);
   }
 }

@@ -4,7 +4,7 @@ namespace EditBookLib.Crop;
 
 using ImageMagick;
 
-public enum DirType { Left, Right, Normal }
+public enum DirType { Left, Right, Normal, Split }
 
 public abstract class CropImage
 {
@@ -16,12 +16,13 @@ public abstract class CropImage
   protected int EndY = 0;
   private int _startX = 0;
   private int _endX = 0;
-  
+
   /// <summary>
   /// 切り抜き
   /// </summary>
   /// <param name="inFileName">入力ファイル</param>
   /// <param name="outFileName">出力ファイル</param>
+  /// <param name="dirType">ディレクトリの処理タイプ</param>
   public void Crop(string inFileName, string outFileName, DirType dirType)
   {
     try
@@ -174,14 +175,14 @@ public abstract class CropImage
 
   protected virtual (int, int) CropLeft(int startX, int endX)
   {
-    endX = endX - (endX - startX) / 2;
-    return (startX, endX);
+    int leftEndX = endX - (endX - startX) / 2;
+    return (startX, leftEndX);
   }
 
   protected virtual (int, int) CropRight(int startX, int endX)
   {
-    startX = startX + (endX - startX) / 2;
-    return (startX, endX);
+    int rightStartX = startX + (endX - startX) / 2;
+    return (rightStartX, endX);
   }
 
   protected abstract bool EqualsColor(IPixelCollection<ushort> pixels, IMagickColor<ushort>? baseColor, int posX, int posY);
